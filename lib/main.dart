@@ -22,8 +22,15 @@ Future<void> firebaseNotificaionBackgroundHandler(RemoteMessage message) async{
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
-
+  //handles background notificaion
+  FirebaseMessaging.onBackgroundMessage(firebaseNotificaionBackgroundHandler);
+  //handles local notification
+  await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: false,
+  );
   runApp(MyApp());
 }
 
