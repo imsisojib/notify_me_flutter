@@ -3,9 +3,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:notify_me_app/providers/firebase_provider.dart';
+import 'package:notify_me_app/providers/theme_provider.dart';
 import 'package:notify_me_app/router/router_helper.dart';
 import 'package:notify_me_app/router/routes.dart';
-import 'package:notify_me_app/strings/ConstantStrings.dart';
+import 'package:notify_me_app/resources/ConstantStrings.dart';
+import 'package:notify_me_app/theme/dark_theme.dart';
+import 'package:notify_me_app/theme/light_theme.dart';
 import 'package:provider/provider.dart';
 import 'di_container.dart' as di;
 
@@ -42,6 +45,7 @@ Future<void> main() async{
   await di.init();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context)=> di.sl<FirebaseProvider>()),
+    ChangeNotifierProvider(create: (context)=> di.sl<ThemeProvider>()),
   ],child: NotifyMeApp(),));
 }
 
@@ -58,16 +62,17 @@ class _NotifyMeAppState extends State<NotifyMeApp>{
 
   @override
   void initState() {
-
+    RouterHelper.setupRouter();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute:  Routes.HOME_SCREEN,
+      initialRoute:  Routes.getWelcomeScreen(),
       onGenerateRoute: RouterHelper.router.generator,
       title: ConstantStrings.APP_NAME,
+      theme: Provider.of<ThemeProvider>(context).darkTheme ? dark : light,
       debugShowCheckedModeBanner: false,
       navigatorKey: NotifyMeApp.navigatorKey,
     );
