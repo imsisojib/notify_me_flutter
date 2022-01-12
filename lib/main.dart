@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:notify_me_app/models/notification.dart';
 import 'package:notify_me_app/providers/NotificationProvider.dart';
 import 'package:notify_me_app/providers/firebase_provider.dart';
 import 'package:notify_me_app/providers/theme_provider.dart';
@@ -17,8 +18,8 @@ import 'di_container.dart' as di;
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
     "default_channel",
   "NotifyMe Notifications",
-  importance: Importance.defaultImportance,
-  playSound: false,
+  importance: Importance.high,
+  playSound: true,
 );
 
 //for local notification globally
@@ -39,7 +40,7 @@ Future<void> main() async{
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
     badge: true,
-    sound: false,
+    sound: true,
   );
 
   //dependency injection initialized
@@ -67,14 +68,13 @@ class _NotifyMeAppState extends State<NotifyMeApp>{
     RouterHelper.setupRouter();
     //setting up firebase notification listener fow show notification
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      Data data = Data.fromJson(message.data);
       RemoteNotification? notification = message.notification;
-      AndroidNotification? androidNotification = message.notification?.android;
-
-      if(notification!=null && androidNotification!=null){
+      if(data!=null){
         flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
+          DateTime.now().millisecond,
+          data.tittle,
+          data.body,
           NotificationDetails(
             android: AndroidNotificationDetails(
               channel.id,
@@ -83,6 +83,25 @@ class _NotifyMeAppState extends State<NotifyMeApp>{
             )
           )
         );
+
+        //redirect screen
+        Provider.of<NotificationProvider>(context,listen: false).setRemoteNotification = data;
+
+      }
+
+      else if(notification!=null){
+        flutterLocalNotificationsPlugin.show(
+            DateTime.now().millisecond,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+                android: AndroidNotificationDetails(
+                    channel.id,
+                    channel.name,
+                    icon: '@mipmap/ic_launcher'
+                )
+            )
+        );
       }
 
     });
@@ -90,12 +109,44 @@ class _NotifyMeAppState extends State<NotifyMeApp>{
     //setting up for openapp according to notification type
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       RemoteNotification? notification = message.notification;
-      AndroidNotification? androidNotification = message.notification?.android;
-      if(notification!.body=="4"){
-        Provider.of<NotificationProvider>(context,listen: false).setRemoteNotification = notification;
-        Navigator.pushNamed(context, Routes.FEATURE_SCREEN_4);
+      Data data = Data.fromJson(message.data);
+      if(data!=null){
+        flutterLocalNotificationsPlugin.show(
+            DateTime.now().millisecond,
+            data.tittle,
+            data.body,
+            NotificationDetails(
+                android: AndroidNotificationDetails(
+                    channel.id,
+                    channel.name,
+                    icon: '@mipmap/ic_launcher'
+                )
+            )
+        );
+
+        //redirect screen
+        Provider.of<NotificationProvider>(context,listen: false).setRemoteNotification = data;
+
       }
+
+      else if(notification!=null){
+        flutterLocalNotificationsPlugin.show(
+            DateTime.now().millisecond,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+                android: AndroidNotificationDetails(
+                    channel.id,
+                    channel.name,
+                    icon: '@mipmap/ic_launcher'
+                )
+            )
+        );
+      }
+
     });
+
+
 
     super.initState();
   }

@@ -53,7 +53,7 @@ class _FeatureScreen4State extends State<FeatureScreen4>{
                                   children: <Widget>[
                                     Center(child: Text(notificationProvider.remoteNotification.tittle,style: TextDecorations.getBoldTextStyle(context,fontSize: 22.0,color: ColorResources.getPrimaryColor(context)),)),
                                     SizedBox(height: 16,),
-                                    Text(notificationProvider.remoteNotification.body,style: TextDecorations.getBoldTextStyle(context,fontSize: 22.0,color: ColorResources.getPrimaryColor(context)),),
+                                    Center(child: Text(notificationProvider.remoteNotification.body,style: TextDecorations.getBoldTextStyle(context,fontSize: 22.0,color: ColorResources.getPrimaryColor(context)),)),
 
                                   ],
                                 ),

@@ -3,10 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:notify_me_app/models/response_model.dart';
 import 'package:notify_me_app/models/user_data.dart';
 import 'package:notify_me_app/repositories/firebase_repository.dart';
+import 'package:notify_me_app/repositories/notification_repository.dart';
 import 'package:notify_me_app/router/routes.dart';
 
 class FirebaseProvider extends ChangeNotifier{
   final FirebaseRepository firebaseRepository;
+  final NotificationRepository notificationRepository;
 
   //common
   bool _isLoading = false;
@@ -20,7 +22,7 @@ class FirebaseProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  FirebaseProvider({required this.firebaseRepository});
+  FirebaseProvider({required this.firebaseRepository,required this.notificationRepository});
 
   //define route according to authentication
   String getRouteAccordingToAuthentication(){
