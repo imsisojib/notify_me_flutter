@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:notify_me_app/models/response_model.dart';
+import 'package:notify_me_app/models/user_data.dart';
 import 'package:notify_me_app/repositories/firebase_repository.dart';
 import 'package:notify_me_app/router/routes.dart';
 
@@ -66,6 +67,11 @@ class FirebaseProvider extends ChangeNotifier{
       UserCredential? userCredential = await firebaseRepository.registerUserByEmailAndPassword(email, password);
       if(userCredential!=null){
         updateLoading(false);
+
+        //add user data to db
+        var emailSplited = email.split("@");
+        await firebaseRepository.updateUserInfoIntoDatabase(UserData(uid: userCredential.user!.uid,email: userCredential.user!.email,userName: emailSplited[0]));
+
         return ResponseModel(true, "Registration Successful.");
       }
     }catch(e){

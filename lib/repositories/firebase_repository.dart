@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:notify_me_app/constants.dart';
+import 'package:notify_me_app/models/user_data.dart';
 
 class FirebaseRepository{
   final FirebaseAuth mAuth;
-
+  final CollectionReference collUsers = FirebaseFirestore.instance.collection(Constants.DB_USERS);
   FirebaseRepository({required this.mAuth});
   
   Future<UserCredential?> registerUserByEmailAndPassword(String email, String password) async{
@@ -45,5 +48,8 @@ class FirebaseRepository{
     return null;
   }
 
+  Future<void> updateUserInfoIntoDatabase(UserData user) async{
+    return collUsers.doc(user.uid).set(user.toJson()).then((value) => null).onError((error, stackTrace) => null);
+  }
 
 }
