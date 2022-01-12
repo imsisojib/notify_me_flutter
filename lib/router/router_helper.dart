@@ -8,6 +8,8 @@ import 'package:notify_me_app/screens/feature_screen4/feature_screen_4.dart';
 import 'package:notify_me_app/screens/home_screen/home_screen.dart';
 import 'package:notify_me_app/screens/login_screen/login_screen.dart';
 import 'package:notify_me_app/screens/registration_screen/registration_screen.dart';
+import 'package:notify_me_app/screens/verification_awaiting/verification_awaiting_screen.dart';
+import 'package:notify_me_app/screens/verification_awaiting/verification_successful_screen.dart';
 import 'package:notify_me_app/screens/welcome_screen/welcome_screen.dart';
 
 class RouterHelper {
@@ -22,6 +24,8 @@ class RouterHelper {
   static final Handler _featureScreen2Handler = new Handler(handlerFunc: (context, Map<String, dynamic> params) => FeatureScreen2());
   static final Handler _featureScreen3Handler = new Handler(handlerFunc: (context, Map<String, dynamic> params) => FeatureScreen3());
   static final Handler _featureScreen4Handler = new Handler(handlerFunc: (context, Map<String, dynamic> params) => FeatureScreen4());
+  static final Handler _verficationAwaitingHandler = new Handler(handlerFunc: (context, Map<String, dynamic> params) => VerificationAwaitingScreen());
+  static final Handler _verficationSuccessHandler = new Handler(handlerFunc: (context, Map<String, dynamic> params) => VerificationSuccessfulScreen());
 
 
 //*******Route Define*********
@@ -39,6 +43,8 @@ class RouterHelper {
     router.define(Routes.FEATURE_SCREEN_2, handler: _featureScreen2Handler, transitionType: TransitionType.fadeIn);
     router.define(Routes.FEATURE_SCREEN_3, handler: _featureScreen3Handler, transitionType: TransitionType.fadeIn);
     router.define(Routes.FEATURE_SCREEN_4, handler: _featureScreen4Handler, transitionType: TransitionType.fadeIn);
+    router.define(Routes.VERIFICATION_AWAITING, handler: _verficationAwaitingHandler, transitionType: TransitionType.fadeIn);
+    router.define(Routes.VERIFICATION_SUCCESS, handler: _verficationSuccessHandler, transitionType: TransitionType.fadeIn);
 
   }
 }

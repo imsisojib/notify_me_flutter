@@ -182,7 +182,14 @@ class _LoginScreenState extends State<LoginScreen>{
                                           if(status.isSuccess){
                                             //successful
                                             Fluttertoast.showToast(msg: status.message,backgroundColor: Colors.green,toastLength: Toast.LENGTH_LONG);
-                                            Navigator.pushNamedAndRemoveUntil(context, Routes.getHomeScreen(), (route) => false);
+                                            //check for email is verified or not
+                                            if(firebaseProvider.firebaseRepository.mAuth.currentUser!.emailVerified){
+                                              Navigator.pushNamedAndRemoveUntil(context, Routes.VERIFICATION_SUCCESS, (route) => false);
+                                            }else{
+                                              //sending verification mail
+                                              firebaseProvider.firebaseRepository.mAuth.currentUser!.sendEmailVerification();
+                                              Navigator.pushNamedAndRemoveUntil(context, Routes.VERIFICATION_AWAITING, (route) => false);
+                                            }
                                           }else{
                                             Fluttertoast.showToast(msg: status.message,backgroundColor: Colors.redAccent,);
                                           }

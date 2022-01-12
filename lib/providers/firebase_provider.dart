@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:notify_me_app/models/response_model.dart';
 import 'package:notify_me_app/repositories/firebase_repository.dart';
+import 'package:notify_me_app/router/routes.dart';
 
 class FirebaseProvider extends ChangeNotifier{
   final FirebaseRepository firebaseRepository;
@@ -19,6 +20,28 @@ class FirebaseProvider extends ChangeNotifier{
   }
 
   FirebaseProvider({required this.firebaseRepository});
+
+  //define route according to authentication
+  String getRouteAccordingToAuthentication(){
+
+    if(firebaseRepository.mAuth.currentUser!=null){
+     if(!firebaseRepository.mAuth.currentUser!.emailVerified){
+       //email not verifies
+       firebaseRepository.mAuth.currentUser!.sendEmailVerification(); //sending verification link to mail.
+       return Routes.VERIFICATION_AWAITING;
+
+     }else{
+       //email verified and login
+       return Routes.getHomeScreen();
+     }
+    }
+
+    return Routes.getHomeScreen();
+  }
+
+  bool isEmailVerified(){
+    return firebaseRepository.mAuth.currentUser!.emailVerified;
+  }
 
   Future<ResponseModel> login(String email, String password) async{
     updateLoading(true);

@@ -69,7 +69,7 @@ class _NotifyMeAppState extends State<NotifyMeApp>{
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute:  Routes.getWelcomeScreen(),
+      initialRoute:  Provider.of<FirebaseProvider>(context).getRouteAccordingToAuthentication(),
       onGenerateRoute: RouterHelper.router.generator,
       title: ConstantStrings.APP_NAME,
       theme: Provider.of<ThemeProvider>(context).darkTheme ? dark : light,

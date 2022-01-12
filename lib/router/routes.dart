@@ -7,6 +7,8 @@ class Routes{
   static final String FEATURE_SCREEN_2 = "2";
   static final String FEATURE_SCREEN_3 = "3";
   static final String FEATURE_SCREEN_4 = "4";
+  static final String VERIFICATION_AWAITING = "verification_awaiting";
+  static final String VERIFICATION_SUCCESS = "verification_success";
 
   static String getWelcomeScreen(){
     return WELCOME_SCREEN;
