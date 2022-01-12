@@ -1,6 +1,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
+import 'package:notify_me_app/providers/NotificationProvider.dart';
 import 'package:notify_me_app/providers/firebase_provider.dart';
 import 'package:notify_me_app/providers/theme_provider.dart';
 import 'package:notify_me_app/repositories/firebase_repository.dart';
@@ -15,6 +16,7 @@ Future<void> init() async {
 
   //Provider
   sl.registerFactory(() => FirebaseProvider(firebaseRepository: sl()));
+  sl.registerFactory(() => NotificationProvider());
   sl.registerFactory(() => ThemeProvider(sharedPreferences: sl()));
 
   // External

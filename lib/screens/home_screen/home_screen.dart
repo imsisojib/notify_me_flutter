@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:notify_me_app/decorations/text_decorations.dart';
 import 'package:notify_me_app/decorations/widget_decorations.dart';
 import 'package:notify_me_app/helper/widget_helper.dart';
+import 'package:notify_me_app/main.dart';
 import 'package:notify_me_app/providers/firebase_provider.dart';
 import 'package:notify_me_app/resources/ConstantStrings.dart';
 import 'package:notify_me_app/resources/color_resources.dart';
@@ -105,9 +107,35 @@ class _HomeScreenState extends State<HomeScreen>{
                                     MaterialButton(
                                       elevation: 6,
                                       padding: EdgeInsets.all(16),
-                                      child: Text("Send Notification",style: TextStyle(fontSize: 18,wordSpacing: 2),),
+                                      child: Text("Send Local Notification",style: TextStyle(fontSize: 18,wordSpacing: 2),),
                                       onPressed: (){
-                                        Navigator.pushNamed(context, Routes.getHomeScreen());
+                                          flutterLocalNotificationsPlugin.show(
+                                            1,
+                                            "Testing Local Notification",
+                                            "4",
+                                              NotificationDetails(
+                                                  android: AndroidNotificationDetails(
+                                                      channel.id,
+                                                      channel.name,
+                                                      icon: '@mipmap/ic_launcher',
+                                                    importance: Importance.high,
+                                                    playSound: true,
+                                                  )
+                                              )
+                                          );
+                                      },
+                                      color: ColorResources.getPrimaryColor(context),
+                                      textColor: ColorResources.COLOR_WHITE,
+                                      minWidth: MediaQuery.of(context).size.width*1.0,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(200)),
+                                    ),
+                                    SizedBox(height: 8,),
+                                    MaterialButton(
+                                      elevation: 6,
+                                      padding: EdgeInsets.all(16),
+                                      child: Text("Send FCM Notification",style: TextStyle(fontSize: 18,wordSpacing: 2),),
+                                      onPressed: (){
+
                                       },
                                       color: ColorResources.getPrimaryColor(context),
                                       textColor: ColorResources.COLOR_WHITE,

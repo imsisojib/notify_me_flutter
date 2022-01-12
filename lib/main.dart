@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:notify_me_app/providers/NotificationProvider.dart';
 import 'package:notify_me_app/providers/firebase_provider.dart';
 import 'package:notify_me_app/providers/theme_provider.dart';
 import 'package:notify_me_app/router/router_helper.dart';
@@ -46,6 +47,7 @@ Future<void> main() async{
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context)=> di.sl<FirebaseProvider>()),
     ChangeNotifierProvider(create: (context)=> di.sl<ThemeProvider>()),
+    ChangeNotifierProvider(create: (context)=> di.sl<NotificationProvider>()),
   ],child: NotifyMeApp(),));
 }
 
@@ -63,6 +65,38 @@ class _NotifyMeAppState extends State<NotifyMeApp>{
   @override
   void initState() {
     RouterHelper.setupRouter();
+    //setting up firebase notification listener fow show notification
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? androidNotification = message.notification?.android;
+
+      if(notification!=null && androidNotification!=null){
+        flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              icon: '@mipmap/ic_launcher'
+            )
+          )
+        );
+      }
+
+    });
+
+    //setting up for openapp according to notification type
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? androidNotification = message.notification?.android;
+      if(notification!.body=="4"){
+        Provider.of<NotificationProvider>(context,listen: false).setRemoteNotification = notification;
+        Navigator.pushNamed(context, Routes.FEATURE_SCREEN_4);
+      }
+    });
+
     super.initState();
   }
 
